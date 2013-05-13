@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>D3 Timeline tidy version</title>
+
+    <style>
+
+        .canvas {
+            border-style: solid;
+            border-color: lightgrey;
+            border-width: 1px;
+            shape-rendering: crispEdges;
+        }
+
+        .superg {
+            border-style: dashed;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        rect {
+            stroke-width: .1;
+            fill: #4eafd7;
+        }
+
+        circle.selected {
+            fill: #ff7f0e;
+            stroke: #ff7f0e; }
+        circle:hover {
+            fill: #ff7f0e;
+            stroke: #707f0e; }
+        circle.selected:hover {
+            fill: #ff7f0e;
+            stroke: #ff7f0e; }
+
+        body {
+            overflow: hidden;
+            font-size: 12px;
+            font-family: "sans serif", Helvetica;
+        }
+
+        .text {
+            color: #ffffff;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div id="graph"></div>
+
+<button title="click me"></button>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.0.8/d3.min.js" charset="utf-8"></script>
+
+<script src="js/timeline/TimelineUtils.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/timeline/TimelineDataOrganiser.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/timeline/TimelineModel.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/timeline/TimelineView.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/timeline/Timeline.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+    d3.json('http://localhost:3000', callback_function);
+
+    function callback_function(data) {
+
+        console.log('creating timeline');
+
+        var events = data["GetResult"][0].events;
+        window.timeline = new Timeline(events);
+    }
+
+</script>
+
+</body>
+
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+
+    <style>
+
+        text {
+            shape-rendering: crispEdges;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div id="container"></div>
+
+<button id="button">click me</button>
+<button id="button2">click me too</button>
+
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+<script>
+
+    var strings = [
+        {label:"label 1"},
+        {label:"label 2"},
+        {label:"label 3"},
+        {label:"label 4"},
+        {label:"label 5"},
+        {label:"label 6"},
+        {label:"label 7"}
+    ]
+
+    var canvas = d3.select("#container")
+            .append("svg")
+                .attr("width", 800)
+                .attr("height", 600)
+
+    canvas.selectAll("text")
+            .append("g")
+            .data(strings)
+            .enter()
+                .append("text")
+                .text(function(d) { return d.label })
+                .attr("text-anchor", "begin")
+                .attr("width", 130)
+                .attr("height", 30)
+                .attr("x", function(d, i) { return i * 80 })
+                .attr("y", 50);
+
+
+    var toggle = false;
+
+    d3.select("#button")
+        .on("click", function(d) {
+            canvas.selectAll("text")
+                .attr("transform", function(d) {
+
+                    toggle = !toggle;
+
+                    if ( toggle ) {
+                        return "rotate(-45)";
+                    }
+
+                    return "rotate(0)";
+                })
+        })
+
+</script>
+
+</body>
+</html>
