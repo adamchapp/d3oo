@@ -9,7 +9,7 @@ var Timeline = function(data, container_width, container_height) {
 
     var margin = {top: 20, right: 5, bottom: 15, left: 0};
 
-    var properties = {
+    this.properties = {
         margin : margin,
         footer_margin: 60,
         row_height: 25,
@@ -20,33 +20,43 @@ var Timeline = function(data, container_width, container_height) {
         date_format: d3.time.format("%Y-%m-%d %X")
     }
 
-    var model = new TimelineModel(properties);
+    this.model = new TimelineModel(properties);
+    this.x_scale = this.getScale(data);
+    this.zoom = this.getZoom(onZoom);
+    this.utils = new TimelineUtils(properties, x_scale);
+
+    var data_provider = this.model.getDataProvider(data, x_scale);
+
+    this.view = new TimelineView(properties, utils, zoom);
+    view.draw(data_provider);
+
+    function onZoom(e) {
+        view.getDataProvider(zoom);
+    }
+
+    return this;
+}
+
+Timeline.prototype.update = function(events) {
+    var data_provider = this.model.getDataProvider(data, this.x_scale);
+    this.view.update(data_provider);
+}
+
+Timeline.prototype.getScale = function(events) {
 
     var ext = model.getDateExtents(model.sort(data));
 
     var x_scale = d3.time.scale()
         .domain([ext[0], ext[1]])
-        .range([0, properties.width]);
+        .range([0, this.properties.width]);
 
-    var zoom = d3.behavior.zoom()
+    return x_scale;
+}
+
+Timeline.prototype.getZoom = function(handler) {
+    return d3.behavior.zoom()
         .x(x_scale)
         .scale(3)
         .scaleExtent([1, 1000])
-        .on("zoom", onZoom)
-
-    data = data.filter(function(d) { return d.enddate.length > 0 && (d.enddate > d.startdate); });
-
-    var utils = new TimelineUtils(properties, x_scale);
-    var data_provider = model.update(data, x_scale);
-
-
-
-    var view = new TimelineView(properties, utils, zoom);
-    view.draw(data_provider);
-
-    function onZoom(e) {
-        view.update(zoom);
-    }
-
-    return this;
+        .on("zoom", handler)
 }
